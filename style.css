@@ -1,0 +1,68 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.wrapper{
+    background-color: blue;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+}
+.to-do-list{
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    top: 20%;
+    width: 50%;
+    left: 25%;
+
+}
+.to-do-list-element{
+    position: relative;
+    padding: 2.5% 0;
+    text-align: center;
+}
+button{
+    padding: 1% 2%;
+    border: 2px solid black;
+}
+.btn-add{
+    margin: 2.5% 0;
+    padding: 2% 2%;
+    align-self: center;
+}
+.btn-delete{
+    display: block;
+    position: relative;
+}
+li label{
+    display: block;
+    position: relative;
+    text-align: left;
+    width: 80%;
+    font-weight: bold;
+    
+}
+.list{
+    list-style: none;
+    
+}
+.list li{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    border: 2px solid black;
+}
+input{
+    border: 2px solid black;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.header{
+    font-size: 30px;
+}
