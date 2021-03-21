@@ -38,11 +38,12 @@ button{
     position: relative;
 }
 li label{
-    display: block;
+    /* display: block; */
     position: relative;
     text-align: left;
     width: 80%;
     font-weight: bold;
+    /* overflow: hidden; */
     
 }
 .list{
@@ -56,12 +57,16 @@ li label{
     position: relative;
     width: 100%;
     border: 2px solid black;
+    padding: 5% 5%;
+    overflow-wrap: break-word;
+
 }
 input{
     border: 2px solid black;
     font-size: 18px;
     font-weight: bold;
     text-transform: uppercase;
+    padding-right: 2%;
 }
 .header{
     font-size: 30px;
