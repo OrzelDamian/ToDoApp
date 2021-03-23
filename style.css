@@ -3,12 +3,17 @@
     padding: 0;
     box-sizing: border-box;
 }
-.wrapper{
+body{
+    display: flex;
+    flex-direction: column;
     background-color: blue;
+
+}
+.wrapper{
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 100vh;
+
 }
 .to-do-list{
     display: flex;
@@ -17,7 +22,7 @@
     top: 20%;
     width: 50%;
     left: 25%;
-
+    /* border: 2px solid black; */
 }
 .to-do-list-element{
     position: relative;
@@ -70,4 +75,15 @@ input{
 }
 .header{
     font-size: 30px;
+}
+.date-time-task{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.date-time-task {
+    font-size: 16px;
+}
+.date-time-task input{
+    font-size: 14px;;
 }
