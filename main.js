@@ -6,37 +6,76 @@ const timeTaskInput = document.querySelector(".time-task-input");
 const tasks = []
 let taskId = 0;
 
+const getDateCorrect = (data2) =>{
+    let day = data2.getUTCDate();
+    let month = data2.getUTCDay();
+    let year = data2.getUTCFullYear();
+    let date;
+
+    if(data2.getUTCDay()<10){
+        month = "0"+data2.getUTCDay();
+    }else if(data2.getUTCDate()<10){
+        day = "0"+data2.getUTCDate();
+    }
+    date = year + month + day;
+    return date;
+}
+
+const getDateTo = (date, to) =>{
+    let year = date.slice(0,4); 
+    let month = date.slice(4,6); 
+    let day = date.slice(6,8); 
+    switch(to){
+        case "html":{
+            console.log("xxx")
+            date = year+"-"+month+"-"+day;
+            break;
+        }
+        default:{
+            date = year+" "+month+" "+day;
+            break;
+        }
+    }
+    return date;
+}
 
 
-const data2 = new Date(Date.now());
 
 
-console.log(data2.getUTCFullYear())
-console.log(data2.getUTCDate())
-console.log(data2.getDay())
-
-
-
+const setHtmlAttributes = (date) =>{
+    dateTaskInput.min =  date;
+}
+setHtmlAttributes(getDateTo(getDateCorrect(new Date(Date.now())),'html'));
 
 console.log(dateTaskInput.min);
 
-console.log(data2.getFullYear()+"-0"+data2.getUTCMonth()+"-0"+data2.getDay())
+// Dokończyć konwersja daty i godziny z html na formę Date();
 
-// dateTaskInput.min = data.getFullYear()+"-0"+data.getMonth()+"-0"+data.getDay();
+const convertDateTimeHtmlToDate = (date, time)=>{
+    let dateTime = date+""+time;
+    let number;
+    for(i=0;i<dateTime.length;i++){
+        if(dateTime[i] ==="-" || dateTime === ":"){
+            number = dateTime.slice(dateTime.length-1,i);
+        }
+    }
+}
 
-console.log(dateTaskInput.min);
 
 const deleteTask = (li)=>{
     li.remove();
 }
 
+
+
 const addTask = ()=>{
     let label;
     let button;
-    let  newTask;
+    let newTask;
 
 
  
+    console.log(timeTaskInput.value);
 
     dateTask = document.querySelector(".date-task-input").value
     timeTask = document.querySelector(".time-task-input").value
@@ -47,14 +86,19 @@ const addTask = ()=>{
     taskId+=1;
 
 
-    tasks.push(
-        {
-            id:taskId,
-            taskName:inputAddTask.value.toUpperCase(),
-            // completionDate:
+    // tasks.push(
+    //     {
+    //         id:taskId,
+    //         taskName:inputAddTask.value.toUpperCase(),
+    //         // completionDate:  
 
-        }
-    )
+    //     }
+    // )
+
+    console.log(getDateCorrect(dateTaskInput.value,"") +" "+ timeTaskInput.value)
+    console.log(new Date(dateTaskInput.value))
+
+
     newTask = document.createElement("li");
     label = document.createElement("label");
     label.textContent = inputAddTask.value.toUpperCase();
