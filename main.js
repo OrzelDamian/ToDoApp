@@ -7,9 +7,9 @@ const tasks = []
 let taskId = 0;
 
 const getDateCorrect = (data2) =>{
-    let day = data2.getUTCDate();
-    let month = data2.getUTCDay();
-    let year = data2.getUTCFullYear();
+    let day = data2.getDate();
+    let month = data2.getMonth();
+    let year = data2.getFullYear();
     let date;
 
     if(data2.getUTCDay()<10){
@@ -18,6 +18,7 @@ const getDateCorrect = (data2) =>{
         day = "0"+data2.getUTCDate();
     }
     date = year + month + day;
+    
     return date;
 }
 
@@ -49,18 +50,30 @@ setHtmlAttributes(getDateTo(getDateCorrect(new Date(Date.now())),'html'));
 
 console.log(dateTaskInput.min);
 
-// Dokończyć konwersja daty i godziny z html na formę Date();
 
 const convertDateTimeHtmlToDate = (date, time)=>{
-    let dateTime = date+""+time;
-    let number;
+    let dateTime = date+" "+time;
+    let dates = [];
+    let temp = 0;
+
     for(i=0;i<dateTime.length;i++){
-        if(dateTime[i] ==="-" || dateTime === ":"){
-            number = dateTime.slice(dateTime.length-1,i);
+        if(dateTime[i] ==="-" || dateTime[i] === ":" || dateTime[i] === " " || i === dateTime.length-1){
+
+            if(i===dateTime.length-1){
+                dates.push(dateTime.slice(temp,i+1));
+            }else{
+                dates.push(dateTime.slice(temp,i));
+            }
+
+            temp = i+1;
         }
     }
-}
 
+    dateTime = new Date(dates[0], dates[1], dates[2], dates[3], dates[4], 0);
+
+    return dateTime.getTime();
+
+}
 
 const deleteTask = (li)=>{
     li.remove();
@@ -75,28 +88,29 @@ const addTask = ()=>{
 
 
  
-    console.log(timeTaskInput.value);
 
     dateTask = document.querySelector(".date-task-input").value
     timeTask = document.querySelector(".time-task-input").value
 
 
-    console.log(dateTask);
-    console.log(timeTask);
+
     taskId+=1;
 
 
-    // tasks.push(
-    //     {
-    //         id:taskId,
-    //         taskName:inputAddTask.value.toUpperCase(),
-    //         // completionDate:  
+    tasks.push(
+        {
+            id:taskId,
+            taskName:inputAddTask.value.toUpperCase(),
+            completionDate:convertDateTimeHtmlToDate(dateTask,timeTask)  
 
-    //     }
-    // )
+        }
+    )
+    tasks.forEach(x=>console.log(x));
 
-    console.log(getDateCorrect(dateTaskInput.value,"") +" "+ timeTaskInput.value)
-    console.log(new Date(dateTaskInput.value))
+
+
+
+
 
 
     newTask = document.createElement("li");
@@ -110,8 +124,25 @@ const addTask = ()=>{
     newTask.appendChild(button);
     list.appendChild(newTask);
     inputAddTask.value = "";
-    
 }
+
+
+
+
+setInterval(()=>{
+    tasks.forEach(task=>{
+
+        console.log(new Date(new Date(task.completionDate).setSeconds(0,0)))
+        console.log(new Date(Date.now()))
+
+        console.log(new Date(new Date(Date.now()).setSeconds(0,0)))
+
+        console.log(task.completionDate +" "+ new Date(Date.now()).setSeconds(0));
+        if(task.completionDate - Date.now() == 0){
+            alert("Nie wykonano zadania")
+        }
+    })
+},1000)
 
 addButton.onclick = addTask;
 
