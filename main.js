@@ -8,17 +8,16 @@ let taskId = 0;
 
 const getDateCorrect = (data2) =>{
     let day = data2.getDate();
-    let month = data2.getMonth();
+    let month = data2.getMonth()+1;
     let year = data2.getFullYear();
     let date;
 
-    if(data2.getUTCDay()<10){
-        month = "0"+data2.getUTCDay();
-    }else if(data2.getUTCDate()<10){
-        day = "0"+data2.getUTCDate();
+    if(month<10){
+        month = "0"+month;
+    }else if(day<10){
+        day = "0"+day;
     }
     date = year + month + day;
-    
     return date;
 }
 
@@ -28,7 +27,6 @@ const getDateTo = (date, to) =>{
     let day = date.slice(6,8); 
     switch(to){
         case "html":{
-            console.log("xxx")
             date = year+"-"+month+"-"+day;
             break;
         }
@@ -43,10 +41,19 @@ const getDateTo = (date, to) =>{
 
 
 
-const setHtmlAttributes = (date) =>{
+const setHtmlDate = (date) =>{
     dateTaskInput.min =  date;
+    dateTaskInput.value =  date;
 }
-setHtmlAttributes(getDateTo(getDateCorrect(new Date(Date.now())),'html'));
+const setHtmlTime = (date) =>{
+
+    
+    // Trzeba tutaj dodać zero kiedy mniejsze od 9
+    timeTaskInput.min = date.getHours()[0]<10?":0"+date.getMinutes():+":"+date.getMinutes(); 
+    timeTaskInput.value =  date.getHours()[0]<10?":0"+date.getMinutes():+":"+date.getMinutes();
+}
+setHtmlTime(new Date(Date.now()));
+setHtmlDate(getDateTo(getDateCorrect(new Date(Date.now())),'html'));
 
 console.log(dateTaskInput.min);
 
@@ -69,10 +76,22 @@ const convertDateTimeHtmlToDate = (date, time)=>{
         }
     }
 
-    dateTime = new Date(dates[0], dates[1], dates[2], dates[3], dates[4], 0);
+    dateTime = new Date(dates[0], dates[1]-1, dates[2], dates[3], dates[4]);
 
-    return dateTime.getTime();
 
+    return dateTime.setSeconds(0);
+
+}
+
+const checkTime = (timeTaskInput) =>{
+    let normal = true;
+    if(timeTaskInput.value.slice(0,2) <= new Date(Date.now()).getHours()){
+        document.querySelector("#errors b").textContent = "Nieprawidłowa godzina";
+        normal = false;
+    }else{
+        document.querySelector("#errors b").textContent = "";
+    }
+    return normal;
 }
 
 const deleteTask = (li)=>{
@@ -82,12 +101,14 @@ const deleteTask = (li)=>{
 
 
 const addTask = ()=>{
+    
+    if(!checkTime(timeTaskInput)) return;
+
     let label;
     let button;
     let newTask;
 
-
- 
+    
 
     dateTask = document.querySelector(".date-task-input").value
     timeTask = document.querySelector(".time-task-input").value
@@ -105,7 +126,6 @@ const addTask = ()=>{
 
         }
     )
-    tasks.forEach(x=>console.log(x));
 
 
 
@@ -131,18 +151,11 @@ const addTask = ()=>{
 
 setInterval(()=>{
     tasks.forEach(task=>{
-
-        console.log(new Date(new Date(task.completionDate).setSeconds(0,0)))
-        console.log(new Date(Date.now()))
-
-        console.log(new Date(new Date(Date.now()).setSeconds(0,0)))
-
-        console.log(task.completionDate +" "+ new Date(Date.now()).setSeconds(0));
-        if(task.completionDate - Date.now() == 0){
-            alert("Nie wykonano zadania")
+        if(task.completionDate - new Date(Date.now()).setSeconds(0,0) == 0){
+            console.log("Nie wykonano zadania")
         }
     })
-},1000)
+},1000*60)
 
 addButton.onclick = addTask;
 
