@@ -1,3 +1,4 @@
+
 const addButton = document.querySelector('.btn-add');
 const inputAddTask = document.querySelector('.input-add-task');
 const list = document.querySelector('.list');
@@ -10,52 +11,57 @@ const getDateCorrect = (data2) =>{
     let day = data2.getDate();
     let month = data2.getMonth()+1;
     let year = data2.getFullYear();
+    let hour = data2.getHours();
+    let minutes = data2.getMinutes();
     let date;
+    let time;
+    let dateTime = [];
 
-    if(month<10){
-        month = "0"+month;
-    }else if(day<10){
-        day = "0"+day;
-    }
-    date = year + month + day;
-    return date;
-}
+            if(month<10){
+                month = "0"+month;
+            }else if(day<10){
+                day = "0"+day;
+            }
+            date = year +""+ month +""+ day;
+            dateTime.push(date)
+            if(hour<10){
+                hour = "0"+hour;
+            }else if(minutes<10){
+                minutes = "0"+minutes;
+            }
+            time = hour +""+ minutes;
+            dateTime.push(time);
 
-const getDateTo = (date, to) =>{
-    let year = date.slice(0,4); 
-    let month = date.slice(4,6); 
-    let day = date.slice(6,8); 
-    switch(to){
-        case "html":{
-            date = year+"-"+month+"-"+day;
-            break;
-        }
-        default:{
-            date = year+" "+month+" "+day;
-            break;
-        }
-    }
-    return date;
+    return dateTime;
 }
 
 
+const getDateInHtmlFormat = (date) =>{
+    let year = date[0].slice(0,4); 
+    let month = date[0].slice(4,6); 
+    let day = date[0].slice(6,8); 
+    let hour = date[1].slice(0,2); 
+    let minutes = date[1].slice(2,4); 
+    let dateTime = [];
 
+    dateTime.push(year+"-"+month+"-"+day);
+    dateTime.push(hour+":"+minutes);
 
-const setHtmlDate = (date) =>{
-    dateTaskInput.min =  date;
-    dateTaskInput.value =  date;
+    return dateTime;
 }
-const setHtmlTime = (date) =>{
 
-    
-    // Trzeba tutaj dodać zero kiedy mniejsze od 9
-    timeTaskInput.min = date.getHours()[0]<10?":0"+date.getMinutes():+":"+date.getMinutes(); 
-    timeTaskInput.value =  date.getHours()[0]<10?":0"+date.getMinutes():+":"+date.getMinutes();
+
+
+
+const setHtmlDateAttributes = (date) =>{
+    dateTaskInput.min =  date[0];
+    dateTaskInput.value =  date[0];
+    timeTaskInput.min =  date[1];
+    timeTaskInput.value =  date[1];
 }
-setHtmlTime(new Date(Date.now()));
-setHtmlDate(getDateTo(getDateCorrect(new Date(Date.now())),'html'));
 
-console.log(dateTaskInput.min);
+setHtmlDateAttributes(getDateInHtmlFormat(getDateCorrect(new Date(Date.now()))));
+
 
 
 const convertDateTimeHtmlToDate = (date, time)=>{
@@ -106,6 +112,7 @@ const addTask = ()=>{
 
     let label;
     let button;
+    let markerDateTask;
     let newTask;
 
     
@@ -129,13 +136,13 @@ const addTask = ()=>{
 
 
 
-
+        
 
 
 
     newTask = document.createElement("li");
     label = document.createElement("label");
-    label.textContent = inputAddTask.value.toUpperCase();
+    label.textContent = inputAddTask.value.toUpperCase()+" Data wykonania zadania :   "+moment(tasks[taskId-1].completionDate).format('YYYY-MM-DD hh:mm');;
     button = document.createElement("button");
     button.textContent = "Usuń";
     button.setAttribute('class',"btn-delete");
