@@ -85,13 +85,13 @@ const convertDateTimeHtmlToDate = (date, time)=>{
     dateTime = new Date(dates[0], dates[1]-1, dates[2], dates[3], dates[4]);
 
 
-    return dateTime.setSeconds(0);
+    return dateTime;
 
 }
 
 const checkTime = (timeTaskInput) =>{
     let normal = true;
-    if(timeTaskInput.value.slice(0,2) <= new Date(Date.now()).getHours()){
+    if(timeTaskInput.value.slice(3,5) <= new Date(Date.now()).getMinutes()){
         document.querySelector("#errors b").textContent = "Nieprawidłowa godzina";
         normal = false;
     }else{
@@ -129,7 +129,12 @@ const addTask = ()=>{
         {
             id:taskId,
             taskName:inputAddTask.value.toUpperCase(),
-            completionDate:convertDateTimeHtmlToDate(dateTask,timeTask)  
+            completionDate:convertDateTimeHtmlToDate(dateTask,timeTask),
+            timeToCompleteTheTask:  {
+                hours: new Date (convertDateTimeHtmlToDate(dateTask,timeTask)).getHours() - new Date(Date.now()).getHours(),
+                minutes: new Date (convertDateTimeHtmlToDate(dateTask,timeTask)).getMinutes() - new Date(Date.now()).getMinutes(),
+                seconds: new Date (convertDateTimeHtmlToDate(dateTask,timeTask)).getSeconds() - new Date(Date.now()).getSeconds(),
+            }
 
         }
     )
@@ -157,12 +162,38 @@ const addTask = ()=>{
 
 
 setInterval(()=>{
+  
     tasks.forEach(task=>{
-        if(task.completionDate - new Date(Date.now()).setSeconds(0,0) == 0){
+        if(new Date (task.completionDate).setSeconds(0,0) - new Date(Date.now()).setSeconds(0,0) == 0){
             console.log("Nie wykonano zadania")
+        }else{
+            if(new Date (task.completionDate).getSeconds() - new Date(Date.now()).getSeconds()<0){
+                task.timeToCompleteTheTask["minutes"] = 0;
+                task.timeToCompleteTheTask["seconds"] = 60 - Math.abs(new Date (task.completionDate).getSeconds() - new Date(Date.now()).getSeconds());
+                
+                if(new Date (task.completionDate).getMinutes() - new Date(Date.now()).getMinutes()<0){
+                    task.timeToCompleteTheTask["hours"] = 0;
+                    task.timeToCompleteTheTask["minutes"] = 60 - Math.abs(new Date (task.completionDate).getMinutes() - new Date(Date.now()).getMinutes());
+                }else{
+                    task.timeToCompleteTheTask["hours"] = new Date (task.completionDate).getHours() - new Date(Date.now()).getHours();
+
+                }
+            }else{
+                if(new Date (task.completionDate).getMinutes() - new Date(Date.now()).getMinutes()<0){
+                    task.timeToCompleteTheTask["hours"] = 0;
+                    task.timeToCompleteTheTask["minutes"] = 60 - Math.abs(new Date (task.completionDate).getMinutes() - new Date(Date.now()).getMinutes());
+                }else{
+                    task.timeToCompleteTheTask["hours"] = new Date (task.completionDate).getHours() - new Date(Date.now()).getHours();
+                    task.timeToCompleteTheTask["minutes"] = new Date (task.completionDate).getMinutes() - new Date(Date.now()).getMinutes();
+                }
+                task.timeToCompleteTheTask["seconds"] = new Date (task.completionDate).getSeconds() - new Date(Date.now()).getSeconds();
+            } 
         }
+        console.log(task.timeToCompleteTheTask["hours"] + " godziny")
+        console.log(task.timeToCompleteTheTask["minutes"] + " minuty")
+        console.log(task.timeToCompleteTheTask["seconds"] +" sekundy")
     })
-},1000*60)
+},1000)
 
 addButton.onclick = addTask;
 
