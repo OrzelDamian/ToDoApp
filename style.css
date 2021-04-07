@@ -42,15 +42,6 @@ button{
     display: block;
     position: relative;
 }
-li label{
-    /* display: block; */
-    position: relative;
-    text-align: left;
-    width: 80%;
-    font-weight: bold;
-    /* overflow: hidden; */
-    
-}
 .list{
     list-style: none;
     
@@ -64,8 +55,22 @@ li label{
     border: 2px solid black;
     padding: 5% 5%;
     overflow-wrap: break-word;
+    flex-wrap: wrap;
 
 }
+.task-detail-wrapper {
+    width: 80%;
+}
+
+.task-detail-wrapper label{
+    position: relative;
+    text-align: left;
+    width: 100%;
+    font-weight: bold;
+
+    
+}
+
 input{
     border: 2px solid black;
     font-size: 18px;
@@ -86,4 +91,8 @@ input{
 }
 .date-time-task input{
     font-size: 14px;;
+}
+.task-detail-wrapper{
+    display: flex;
+    flex-direction: column;
 }

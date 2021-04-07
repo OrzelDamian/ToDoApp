@@ -110,10 +110,14 @@ const addTask = ()=>{
     
     if(!checkTime(timeTaskInput)) return;
 
-    let label;
+    let dateOfExecution;
     let button;
-    let markerDateTask;
+    let countdownTime;
     let newTask;
+    let nameTask;
+    let taskDetailWrapper;
+
+
 
     
 
@@ -146,14 +150,29 @@ const addTask = ()=>{
 
 
     newTask = document.createElement("li");
-    label = document.createElement("label");
-    label.textContent = inputAddTask.value.toUpperCase()+" Data wykonania zadania :   "+moment(tasks[taskId-1].completionDate).format('YYYY-MM-DD hh:mm');;
+    newTask.setAttribute('data-id', "task-"+tasks[taskId-1].id);
+    taskDetailWrapper = document.createElement("div");
+    taskDetailWrapper.setAttribute("id", "task-detail-wrapper")
+    taskDetailWrapper.setAttribute("class", "task-detail-wrapper")
+    newTask.append(taskDetailWrapper);
+    nameTask = document.createElement("label");
+    nameTask.textContent = nameTask.textContent = "Nazwa zadania: " +tasks[taskId-1].taskName;
+    taskDetailWrapper.append(nameTask);     
+    dateOfExecution = document.createElement("label");
+    dateOfExecution.textContent = " Data wykonania zadania : "+moment(tasks[taskId-1].completionDate).format('YYYY-MM-DD hh:mm');;
     button = document.createElement("button");
     button.textContent = "Usuń";
     button.setAttribute('class',"btn-delete");
     button.onclick = ()=> deleteTask(newTask);
-    newTask.appendChild(label);
+    taskDetailWrapper.appendChild(dateOfExecution);
+    countdownTime = document.createElement("label");
+    countdownTime.setAttribute("id","countdown-time")
+    countdownTime.setAttribute("class","countdown-time")
+    countdownTime.textContent = "";
+    taskDetailWrapper.append(countdownTime); 
+    taskDetailWrapper.append(countdownTime); 
     newTask.appendChild(button);
+   
     list.appendChild(newTask);
     inputAddTask.value = "";
 }
@@ -168,7 +187,7 @@ setInterval(()=>{
             console.log("Nie wykonano zadania")
         }else{
             if(new Date (task.completionDate).getSeconds() - new Date(Date.now()).getSeconds()<0){
-                task.timeToCompleteTheTask["minutes"] = 0;
+                task.timeToCompleteTheTask["minutes"] = Math.abs(new Date (task.completionDate).getMinutes() - new Date(Date.now()).getMinutes());
                 task.timeToCompleteTheTask["seconds"] = 60 - Math.abs(new Date (task.completionDate).getSeconds() - new Date(Date.now()).getSeconds());
                 
                 if(new Date (task.completionDate).getMinutes() - new Date(Date.now()).getMinutes()<0){
@@ -187,11 +206,12 @@ setInterval(()=>{
                     task.timeToCompleteTheTask["minutes"] = new Date (task.completionDate).getMinutes() - new Date(Date.now()).getMinutes();
                 }
                 task.timeToCompleteTheTask["seconds"] = new Date (task.completionDate).getSeconds() - new Date(Date.now()).getSeconds();
-            } 
+            }
+            // task-detail-wrapper 
+            document.querySelector(`[data-id='task-${task.id}']>#task-detail-wrapper>#countdown-time`).textContent = "Do końca wykonania zadania pozostało "+ task.timeToCompleteTheTask["hours"]+" godzina:"
+            + task.timeToCompleteTheTask["minutes"]+" minut:"
+            + task.timeToCompleteTheTask["seconds"]+" sekund" 
         }
-        console.log(task.timeToCompleteTheTask["hours"] + " godziny")
-        console.log(task.timeToCompleteTheTask["minutes"] + " minuty")
-        console.log(task.timeToCompleteTheTask["seconds"] +" sekundy")
     })
 },1000)
 
