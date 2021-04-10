@@ -96,9 +96,33 @@ const convertDateTimeHtmlToDate = (date, time)=>{
 
 const checkTime = (timeTaskInput) =>{
     let normal = true;
-    console.log(timeTaskInput.value.slice(3,5));
-    if(timeTaskInput.value.slice(3,5) <= new Date(Date.now()).getMinutes()){
-        document.querySelector("#errors b").textContent = "Nieprawidłowa godzina";
+    console.log(timeTaskInput.value.slice(3,5)+ "XDD");
+
+
+    console.log(
+        parseInt(timeTaskInput.value.slice(0,2)) +"=="+ new Date(Date.now()).getHours() +"\n"+
+        parseInt(timeTaskInput.value.slice(3,5)) +"=="+  new Date(Date.now()).getMinutes() +"\n"+
+        
+
+        parseInt(dateTaskInput.value.slice(8,11)) +"=="+  new Date(Date.now()).getDate() +"\n"+
+        parseInt(dateTaskInput.value.slice(5,7)) +"=="+  (new Date(Date.now()).getMonth()+1)  +"\n"+
+        parseInt(dateTaskInput.value.slice(0,4)) +"=="+  new Date(Date.now()).getFullYear()
+        +"\n"+
+        timeTaskInput.value.length
+    );
+
+
+    if(parseInt(timeTaskInput.value.slice(0,2)) <= new Date(Date.now()).getHours()
+    &&
+    parseInt(timeTaskInput.value.slice(3,5)) <= new Date(Date.now()).getMinutes()
+    &&
+    parseInt(dateTaskInput.value.slice(8,11)) === new Date(Date.now()).getDate()
+    &&
+    parseInt(dateTaskInput.value.slice(5,7)) === new Date(Date.now()).getMonth()+1
+    &&
+    parseInt(dateTaskInput.value.slice(0,4)) === new Date(Date.now()).getFullYear()
+    ){
+        document.querySelector("#errors b").textContent = "Nieprawidłowa data";
         normal = false;
     }else{
         document.querySelector("#errors b").textContent = "";
@@ -114,7 +138,7 @@ const deleteTask = (li)=>{
 
 const addTask = ()=>{
     
-    // if(!checkTime(timeTaskInput)) return;
+    if(!checkTime(timeTaskInput)) return;
 
     let dateOfExecution;
     let button;
@@ -123,9 +147,6 @@ const addTask = ()=>{
     let nameTask;
     let taskDetailWrapper;
 
-
-
-    
 
     dateTask = document.querySelector(".date-task-input").value
     timeTask = document.querySelector(".time-task-input").value
@@ -208,10 +229,9 @@ setInterval(()=>{
                     task.timeToCompleteTheTask["minutes"] = 60 - Math.abs(new Date (task.completionDate).getMinutes() - new Date(Date.now()).getMinutes()-1);
                 }else{
                     task.timeToCompleteTheTask["hours"] = new Date (task.completionDate).getHours() - new Date(Date.now()).getHours();
-
                 }
             }else{
-                if(new Date (task.completionDate).getMinutes() - new Date(Date.now()).getMinutes()<0){
+                if(new Date (task.completionDate).getMinutes() - new Date(Date.now()).getMinutes()-1<0){
                     task.timeToCompleteTheTask["hours"] = 0;
                     task.timeToCompleteTheTask["minutes"] = 60 - Math.abs(new Date (task.completionDate).getMinutes() - new Date(Date.now()).getMinutes())-1;
                 }else{
@@ -220,7 +240,11 @@ setInterval(()=>{
                 }
                 task.timeToCompleteTheTask["seconds"] = new Date (task.completionDate).getSeconds() - new Date(Date.now()).getSeconds();
             }
-            days = task.timeToCompleteTheTask["days"]-1;
+            days = task.timeToCompleteTheTask["days"];
+            if(days>0){
+                days = task.timeToCompleteTheTask["days"]-1;
+            }
+
             document.querySelector(`[data-id='task-${task.id}']>#task-detail-wrapper>#countdown-time`).textContent = "Do końca wykonania zadania pozostało "
             + days+" dni:"
             + task.timeToCompleteTheTask["hours"]+" godzin:"
@@ -234,4 +258,9 @@ setInterval(()=>{
 ,1000)
 
 addButton.onclick = addTask;
+
+// Godzina 00:00
+// Check time
+// Dni
+
 
